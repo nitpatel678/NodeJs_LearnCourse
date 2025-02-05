@@ -10,7 +10,6 @@ fs.writeFile('./test.txt','Hello JavaScript', (err, data) => {});
 const result = fs.readFileSync('./contact.txt', "utf-8");
 console.log(result);
 
-
 // Read a File asynchronous way
 const data = fs.readFile('./contact.txt', 'utf-8', (err, data) => {
     if (err) {
