@@ -8,6 +8,11 @@ const port = 8000;
 // Middlware - Plugin
 app.use(express.urlencoded({extended: false}));
 
+app.use((res,req,next)=>{
+    console.log("Testing the middleware");
+    next();
+})
+
 // REST API POINTS
 app.get('/api/users', (req, res) => {
     return res.json(users);
