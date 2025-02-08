@@ -1,0 +1,8 @@
+[Url Shortener Project]
+
+-> Important steps : 
+npm init 
+npm install express
+npm install nodeman
+npm install shortid (for creating url shortener)
+npm install mongoose
