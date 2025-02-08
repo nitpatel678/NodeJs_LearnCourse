@@ -1,0 +1,5 @@
+                         [ How mongodb works ?]
+
+-> First create a schema
+-> Schema - Model
+   Using Model we do CRUD Operation
