@@ -1,138 +1,41 @@
 const express = require('express');
 const app = express();
 const fs = require('fs');
-const mongoose = require("mongoose");
 
-// Connect to MongoDB
-mongoose
-    .connect("mongodb://127.0.0.1:27017/youtube-app-1")
-    .then(() => console.log("Mongodb Connected"))
-    .catch((err) => console.log("Error while connecting", err));
 
-// Creating a User Schema
-const userSchema = new mongoose.Schema({
-    first_name: {
-        type: String,
-    },
-    last_name: {
-        type: String,
-    },
-    email: {
-        type: String,
-    },
-    jobtitle: {
-        type: String,
-    }
-});
 
-// Creating a model for that schema
-const User = mongoose.model('user', userSchema);
+const {logReqRes} = require('./middleware');
 
-// Removing the predefined database
+const userRouter = require('./routes/user');
 
-// const users = require('./MOCK_DATA.json');
+const {connectMongodb} = require('./connection');
+connectMongodb("mongodb://127.0.0.1:27017/youtube-app-1");
 const port = 8000;
 
 // Middleware - Plugins
-app.use(express.json()); // Middleware to parse JSON body
+app.use(logReqRes("log.txt")); // Middleware to parse JSON body
 app.use(express.urlencoded({ extended: false })); // Middleware to parse URL-encoded data
 
-// Corrected middleware for logging requests
-app.use((req, res, next) => {
-    console.log("Testing the middleware");
-    fs.appendFile(
-        "log.txt",
-        `\n${Date.now()}: ${req.ip} ${req.method} ${req.path}\n`,
-        (err) => {
-            if (err) console.log("Error writing to log file:", err);
-            next();
-        }
-    );
-});
 
-// REST API ENDPOINTS
-app.get('/api/users', async (req, res) => {
-    const dbAllUsers = await User.find({});
-    return res.json(dbAllUsers);
-});
+/*
 
-app.get('/users', async(req, res) => {
-    // Creating an HTML render page to list all the users
-    const dbAllUsers = await User.find({});
-    const html = `
-    <ul>
-       ${dbAllUsers.map((user) => `<li>${user.first_name}-${user.email}</li>`).join("")}
-    </ul>
-    `;
-    res.send(html);
-});
-
-// To get profile of a particular ID and display in HTML
-app.get('/users/:id', (req, res) => {
-    const id = Number(req.params.id);
-    const user = users.find((user) => user.id === id);
-
-    if (user) {
-        return res.send(`<li>${user.first_name}</li>`);
-    } else {
-        return res.status(404).send({ error: "User not found" });
-    }
-});
-
-// To get a profile of a particular ID and display in JSON format
-app.get('/api/users/:id', (req, res) => {
+BELOW METHOD IS THE BEST METHOD TO HANDLE ROUTE OF SAME ID FOR get, patch, delete
+app.route('/api/users/:id')
+.get((req, res) => {
     const id = Number(req.params.id);
     const user = users.find(user => user.id === id);
     return res.json(user);
-});
-
-// Corrected POST route
-app.post('/api/users/post/', async (req, res) => {
-    try {
-        // Extracting query parameters
-        const { first_name, last_name, email, jobtitle } = req.query;
-
-        // Correct validation: Ensure at least one field is provided
-        if (!first_name && !last_name && !email && !jobtitle) {
-            return res.status(400).json({ msg: "At least one field must be provided." });
-        }
-
-        // Create the user in the database
-        const result = await User.create({
-            first_name,
-            last_name,
-            email,
-            jobtitle,
-        });
-
-        console.log("Result", result);
-        return res.status(201).json({ msg: "Success", user: result });
-    } catch (error) {
-        console.error("Error creating user:", error);
-        return res.status(500).json({ msg: "Internal Server Error", error: error.message });
-    }
-});
-
-
-app.delete('/api/users/delete/', (req, res) => {
-    // TODO: To update a user details
+})
+.patch((req, res) => {
+    // TODO: to edit user with id
+    return res.json({ status: "Pending" });
+})
+.delete((req, res) => {
+    // TODO: To delete a user
     return res.json({ status: "Pending" });
 });
 
-// BELOW METHOD IS THE BEST METHOD TO HANDLE ROUTE OF SAME ID FOR get, patch, delete
-// app.route('/api/users/:id')
-// .get((req, res) => {
-//     const id = Number(req.params.id);
-//     const user = users.find(user => user.id === id);
-//     return res.json(user);
-// })
-// .patch((req, res) => {
-//     // TODO: to edit user with id
-//     return res.json({ status: "Pending" });
-// })
-// .delete((req, res) => {
-//     // TODO: To delete a user
-//     return res.json({ status: "Pending" });
-// });
+*/
 
+app.use('/users', userRouter);
 app.listen(port, () => console.log('Server has been started.'));
