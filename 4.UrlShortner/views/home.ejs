@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hey From Server</title>
+    <style>
+        .heading{
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-weight: bold;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+
+</head>
+<body>
+    <h1 class="heading">Garma Garam Bhosdi</h1>
+    <ul>
+        <% if (items && items.length > 0) { %>
+            <% items.forEach(item => { %>
+                <li><%= item %></li>
+            <% }); %>
+        <% } else { %>
+            <li>No items available</li>
+        <% } %>
+    </ul>
+
+</body>
+</html>
